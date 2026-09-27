@@ -89,14 +89,6 @@
             font-size: 0.9em;
         }
 
-        .song-duration {
-            color: var(--text-secondary);
-            font-size: 0.95em;
-            margin-right: 20px;
-            min-width: 45px;
-            text-align: right;
-        }
-
         .song-actions {
             display: flex;
             align-items: center;
@@ -288,7 +280,6 @@
 
         <div class="player-controls">
             <div class="control-buttons">
-                <!-- Используем HTML-сущности вместо эмодзи - они не пропадут -->
                 <button class="btn-control" id="btnPrev">&#9198;</button>
                 <button class="btn-control btn-play-pause" id="btnPlayPause">&#9654;</button>
                 <button class="btn-control" id="btnNext">&#9197;</button>
@@ -316,28 +307,24 @@
                 title: "Ночная прогулка",
                 artist: "Светлана Дудко",
                 src: "nochnaya_progulka.mp3",
-                duration: "3:20",
                 isFav: false
             },
             {
                 title: "Без тебя скучаю",
                 artist: "Светлана Дудко",
                 src: "bez_tebya_skuchayu.mp3",
-                duration: "3:45",
                 isFav: false
             },
             {
                 title: "Летняя ночь",
                 artist: "Светлана Дудко",
                 src: "letnyaya_noch.mp3",
-                duration: "3:10",
                 isFav: false
             },
             {
                 title: "Чего-то не хватает",
                 artist: "Светлана Дудко",
-                src: "chego_to_ne_hvataet.mp3",
-                duration: "3:30",
+                src: "chego_to_ne_hwataet.mp3",
                 isFav: false
             }
         ];
@@ -369,7 +356,6 @@
                 const li = document.createElement('li');
                 li.className = `song-item ${index === currentSongIndex ? 'active' : ''}`;
                 
-                // Используем HTML-сущности для иконок
                 const playIcon = (index === currentSongIndex && isPlaying) ? '&#9208;' : '&#9654;';
                 const favIcon = song.isFav ? '&#9733;' : '&#9734;';
                 const favClass = song.isFav ? 'active' : '';
@@ -379,7 +365,6 @@
                         <span class="song-title">${song.title}</span>
                         <span class="song-artist">${song.artist}</span>
                     </div>
-                    <div class="song-duration">${song.duration}</div>
                     <div class="song-actions">
                         <button class="btn-icon btn-play" data-index="${index}">${playIcon}</button>
                         <button class="btn-icon btn-fav ${favClass}" data-index="${index}">${favIcon}</button>
@@ -467,7 +452,6 @@
                 const song = songs[currentSongIndex];
                 playerTitle.textContent = song.title;
                 playerArtist.textContent = song.artist;
-                // Используем HTML-сущности
                 btnPlayPause.innerHTML = isPlaying ? '&#9208;' : '&#9654;';
             } else {
                 playerTitle.textContent = "Выберите трек";
