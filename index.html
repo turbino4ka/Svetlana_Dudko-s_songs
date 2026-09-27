@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Песни Светланы Дудко</title>
     <style>
-        /* --- Базовые стили --- */
         :root {
             --bg-color: #121212;
             --surface-color: #1e1e1e;
@@ -31,7 +30,6 @@
             overflow: hidden;
         }
 
-        /* --- Заголовок --- */
         header {
             padding: 20px 30px;
             background-color: var(--surface-color);
@@ -44,7 +42,6 @@
             font-weight: 700;
         }
 
-        /* --- Основной контент (Список песен) --- */
         main {
             flex: 1;
             overflow-y: auto;
@@ -92,7 +89,6 @@
             font-size: 0.9em;
         }
 
-        /* Длительность песни */
         .song-duration {
             color: var(--text-secondary);
             font-size: 0.95em;
@@ -130,7 +126,6 @@
             color: var(--primary-color);
         }
 
-        /* --- Нижний плеер --- */
         .player-bar {
             background-color: var(--surface-color);
             border-top: 1px solid #333;
@@ -276,7 +271,7 @@
 <body>
 
     <header>
-        <h1> Песни Светланы Дудко</h1>
+        <h1>🎵 Песни Светланы Дудко</h1>
     </header>
 
     <main>
@@ -295,7 +290,7 @@
             <div class="control-buttons">
                 <button class="btn-control" id="btnPrev">⏮</button>
                 <button class="btn-control btn-play-pause" id="btnPlayPause">▶</button>
-                <button class="btn-control" id="btnNext"></button>
+                <button class="btn-control" id="btnNext">⏭</button>
             </div>
             
             <div class="progress-container">
@@ -315,8 +310,6 @@
     <audio id="audioPlayer"></audio>
 
     <script>
-        // === СПИСОК ПЕСЕН ===
-        // Замени title, artist, src и duration на свои данные
         const songs = [
             {
                 title: "Первая песня",
@@ -472,7 +465,7 @@
                 const song = songs[currentSongIndex];
                 playerTitle.textContent = song.title;
                 playerArtist.textContent = song.artist;
-                btnPlayPause.textContent = isPlaying ? '⏸' : '▶';
+                btnPlayPause.textContent = isPlaying ? '' : '▶';
             } else {
                 playerTitle.textContent = "Выберите трек";
                 playerArtist.textContent = "-";
