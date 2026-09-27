@@ -288,9 +288,10 @@
 
         <div class="player-controls">
             <div class="control-buttons">
-                <button class="btn-control" id="btnPrev">⏮</button>
-                <button class="btn-control btn-play-pause" id="btnPlayPause">▶</button>
-                <button class="btn-control" id="btnNext"></button>
+                <!-- Используем HTML-сущности вместо эмодзи - они не пропадут -->
+                <button class="btn-control" id="btnPrev">&#9198;</button>
+                <button class="btn-control btn-play-pause" id="btnPlayPause">&#9654;</button>
+                <button class="btn-control" id="btnNext">&#9197;</button>
             </div>
             
             <div class="progress-container">
@@ -301,9 +302,9 @@
         </div>
 
         <div class="extra-controls">
-            <button class="btn-control" title="Повтор">🔁</button>
-            <button class="btn-control" title="Случайный порядок">🔀</button>
-            <button class="btn-control" title="Громкость">🔊</button>
+            <button class="btn-control" title="Повтор">&#128257;</button>
+            <button class="btn-control" title="Случайный порядок">&#128256;</button>
+            <button class="btn-control" title="Громкость">&#128266;</button>
         </div>
     </div>
 
@@ -312,31 +313,31 @@
     <script>
         const songs = [
             {
-                title: "Первая песня",
+                title: "Ночная прогулка",
                 artist: "Светлана Дудко",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                src: "nochnaya_progulka.mp3",
+                duration: "3:20",
+                isFav: false
+            },
+            {
+                title: "Без тебя скучаю",
+                artist: "Светлана Дудко",
+                src: "bez_tebya_skuchayu.mp3",
                 duration: "3:45",
                 isFav: false
             },
             {
-                title: "Вторая композиция",
+                title: "Летняя ночь",
                 artist: "Светлана Дудко",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-                duration: "4:12",
+                src: "letnyaya_noch.mp3",
+                duration: "3:10",
                 isFav: false
             },
             {
-                title: "Третий хит",
+                title: "Чего-то не хватает",
                 artist: "Светлана Дудко",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-                duration: "5:01",
-                isFav: false
-            },
-            {
-                title: "Четвертый трек",
-                artist: "Светлана Дудко",
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-                duration: "3:28",
+                src: "chego_to_ne_hvataet.mp3",
+                duration: "3:30",
                 isFav: false
             }
         ];
@@ -368,8 +369,9 @@
                 const li = document.createElement('li');
                 li.className = `song-item ${index === currentSongIndex ? 'active' : ''}`;
                 
-                const playIcon = (index === currentSongIndex && isPlaying) ? '⏸' : '▶';
-                const favIcon = song.isFav ? '★' : '☆';
+                // Используем HTML-сущности для иконок
+                const playIcon = (index === currentSongIndex && isPlaying) ? '&#9208;' : '&#9654;';
+                const favIcon = song.isFav ? '&#9733;' : '&#9734;';
                 const favClass = song.isFav ? 'active' : '';
 
                 li.innerHTML = `
@@ -414,7 +416,7 @@
             const song = songs[index];
             
             audioPlayer.src = song.src;
-            audioPlayer.play();
+            audioPlayer.play().catch(e => console.error("Ошибка воспроизведения:", e));
             isPlaying = true;
             
             updatePlayerUI();
@@ -434,7 +436,7 @@
             } else if (isPlaying) {
                 pauseSong();
             } else {
-                audioPlayer.play();
+                audioPlayer.play().catch(e => console.error("Ошибка воспроизведения:", e));
                 isPlaying = true;
                 updatePlayerUI();
                 renderSongList();
@@ -465,11 +467,12 @@
                 const song = songs[currentSongIndex];
                 playerTitle.textContent = song.title;
                 playerArtist.textContent = song.artist;
-                btnPlayPause.textContent = isPlaying ? '⏸' : '▶';
+                // Используем HTML-сущности
+                btnPlayPause.innerHTML = isPlaying ? '&#9208;' : '&#9654;';
             } else {
                 playerTitle.textContent = "Выберите трек";
                 playerArtist.textContent = "-";
-                btnPlayPause.textContent = '▶';
+                btnPlayPause.innerHTML = '&#9654;';
             }
         }
 
