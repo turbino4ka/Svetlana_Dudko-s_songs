@@ -315,4 +315,193 @@
                 title: "Первая песня",
                 artist: "Светлана Дудко",
                 src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                duration
+                duration: "3:45",
+                isFav: false
+            },
+            {
+                title: "Вторая композиция",
+                artist: "Светлана Дудко",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                duration: "4:12",
+                isFav: false
+            },
+            {
+                title: "Третий хит",
+                artist: "Светлана Дудко",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                duration: "5:01",
+                isFav: false
+            },
+            {
+                title: "Четвертый трек",
+                artist: "Светлана Дудко",
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                duration: "3:28",
+                isFav: false
+            }
+        ];
+
+        let currentSongIndex = -1;
+        let isPlaying = false;
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const songListEl = document.getElementById('songList');
+        const playerTitle = document.getElementById('playerTitle');
+        const playerArtist = document.getElementById('playerArtist');
+        const btnPlayPause = document.getElementById('btnPlayPause');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function renderSongList() {
+            songListEl.innerHTML = '';
+            songs.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.className = `song-item ${index === currentSongIndex ? 'active' : ''}`;
+                
+                const playIcon = (index === currentSongIndex && isPlaying) ? '⏸' : '▶';
+                const favIcon = song.isFav ? '★' : '☆';
+                const favClass = song.isFav ? 'active' : '';
+
+                li.innerHTML = `
+                    <div class="song-info">
+                        <span class="song-title">${song.title}</span>
+                        <span class="song-artist">${song.artist}</span>
+                    </div>
+                    <div class="song-duration">${song.duration}</div>
+                    <div class="song-actions">
+                        <button class="btn-icon btn-play" data-index="${index}">${playIcon}</button>
+                        <button class="btn-icon btn-fav ${favClass}" data-index="${index}">${favIcon}</button>
+                    </div>
+                `;
+                
+                li.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('btn-fav')) {
+                        playSong(index);
+                    }
+                });
+
+                li.querySelector('.btn-play').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    playSong(index);
+                });
+
+                li.querySelector('.btn-fav').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(index);
+                });
+
+                songListEl.appendChild(li);
+            });
+        }
+
+        function playSong(index) {
+            if (currentSongIndex === index && isPlaying) {
+                pauseSong();
+                return;
+            }
+
+            currentSongIndex = index;
+            const song = songs[index];
+            
+            audioPlayer.src = song.src;
+            audioPlayer.play();
+            isPlaying = true;
+            
+            updatePlayerUI();
+            renderSongList();
+        }
+
+        function pauseSong() {
+            audioPlayer.pause();
+            isPlaying = false;
+            updatePlayerUI();
+            renderSongList();
+        }
+
+        function togglePlayPause() {
+            if (currentSongIndex === -1) {
+                playSong(0);
+            } else if (isPlaying) {
+                pauseSong();
+            } else {
+                audioPlayer.play();
+                isPlaying = true;
+                updatePlayerUI();
+                renderSongList();
+            }
+        }
+
+        function nextSong() {
+            if (currentSongIndex === -1) return;
+            let nextIndex = currentSongIndex + 1;
+            if (nextIndex >= songs.length) nextIndex = 0;
+            playSong(nextIndex);
+        }
+
+        function prevSong() {
+            if (currentSongIndex === -1) return;
+            let prevIndex = currentSongIndex - 1;
+            if (prevIndex < 0) prevIndex = songs.length - 1;
+            playSong(prevIndex);
+        }
+
+        function toggleFavorite(index) {
+            songs[index].isFav = !songs[index].isFav;
+            renderSongList();
+        }
+
+        function updatePlayerUI() {
+            if (currentSongIndex !== -1) {
+                const song = songs[currentSongIndex];
+                playerTitle.textContent = song.title;
+                playerArtist.textContent = song.artist;
+                btnPlayPause.textContent = isPlaying ? '⏸' : '▶';
+            } else {
+                playerTitle.textContent = "Выберите трек";
+                playerArtist.textContent = "-";
+                btnPlayPause.textContent = '▶';
+            }
+        }
+
+        function updateProgress() {
+            if (audioPlayer.duration) {
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.value = percent;
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+                totalTimeEl.textContent = formatTime(audioPlayer.duration);
+                
+                const val = (progressBar.value - progressBar.min) / (progressBar.max - progressBar.min) * 100;
+                progressBar.style.background = `linear-gradient(to right, var(--primary-color) ${val}%, #4d4d4d ${val}%)`;
+            }
+        }
+
+        function seek() {
+            if (audioPlayer.duration) {
+                const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+                audioPlayer.currentTime = seekTime;
+            }
+        }
+
+        audioPlayer.addEventListener('loadedmetadata', updateProgress);
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('ended', nextSong);
+
+        btnPlayPause.addEventListener('click', togglePlayPause);
+        btnNext.addEventListener('click', nextSong);
+        btnPrev.addEventListener('click', prevSong);
+        progressBar.addEventListener('input', seek);
+
+        renderSongList();
+    </script>
+</body>
+</html>
